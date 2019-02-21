@@ -1,0 +1,92 @@
+<p id="notice"><%= notice %></p>
+   <div style="text-align: center;">
+  <p>
+    <h1>Page Profil de l'event</h1>
+
+    <%if @event.avatar.attached?%>
+      <%= image_tag @event.avatar, alt: 'avatar' %>
+    <%else%>
+      <p>=== Il n'y a pas encore d'avatar lié à cet utilisateur ===</p>
+    <%end%>
+    <% if current_user.id == @event.admin_id %>
+      <h3>Changer l'avatar de l'event?</h3>
+      </br>
+      <%= form_tag event_avatars_path(@event), multipart: true do %>
+      <%= file_field_tag :avatar %>
+      <%= submit_tag "mettre à jour" %>
+      <% end %>
+    <% end %>
+  </p>
+
+  <p>
+    <strong>Start date:</strong>
+    <%= @event.start_date %>
+  </p>
+
+  <p>
+    <strong>Duration:</strong>
+    <%= @event.duration %>
+  </p>
+
+  <p>
+    <strong>Title:</strong>
+    <%= @event.title %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= @event.description %>
+  </p>
+
+  <p>
+    <strong>Price:</strong>
+    <%= @event.price %>
+  </p>
+
+  <p>
+    <strong>Location:</strong>
+    <%= @event.location %>
+  </p>
+
+  <p>
+    <strong>Admin email:</strong>
+    <%= User.find(Event.find(@event.id).admin_id).email %>
+  </p>
+
+  <p>
+    <strong>Number of guests</strong>
+    <%= Attendance.where(event_id: @event.id).count %>
+  </p>
+
+    <% if current_user.id != @event.admin_id %>
+      <div><%= form_tag subscription_path do %>
+        <article>
+          <% if flash[:error].present? %>
+            <div id="error_explanation">
+             <p><%= flash[:error] %></p>
+            </div>
+          <% end %>
+          <label class="amount">
+            <p> Pour rejoindre l'événement "<%= @event.title %>", merci de régler la somme de <%= @event.price %>€</p>
+          </label>
+        </article>
+
+      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+              data-description="Payment for - <%= @event.title %> -"
+              data-amount="<%= (@event.price.to_f)*100 %>"
+              data-currency="eur"
+              data-locale="auto"></script> 
+      <% end %>
+      </div>
+    <% else %>
+      <p class="text-center">  <%= link_to "My event", { :controller => "attendances", :action => "show"}, class: "btn btn-success" %> </p>
+    <% end %>
+
+
+
+  <p>
+  <%= link_to 'Edit', edit_event_path(@event) %> |
+  <%= link_to 'Back', events_path %>
+  </p>
+</div>

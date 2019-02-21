@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>First name:</strong>
+  <%= @user.first_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @user.last_name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @user.description %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong> Voici les titres et les liens des évenements que tu as crée:</strong>
+</p>
+
+      <div class="container">
+        <div class="row">
+          <% Event.where(admin_id: @user.id).each do |event| %>
+            <div class="col-md-4 mb-4" >
+              <h5><%= event.title %></h5>
+              <td><%= link_to 'Show Event', event %></td>
+            </div>
+          <%end%>     
+        </div>
+      </div>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>

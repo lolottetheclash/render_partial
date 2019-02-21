@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First_name</th>
+      <th scope="col">Last_name</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <div class="container">
+	     <% i = 1  %>
+	        <% @attendances.where(event_id: @event_id).each do |attendance| %>
+        		<div class="row">
+	            	<tr>
+				      <th scope="row"><%= "#{i}" %>
+				      <td><%= User.find(Attendance.find(attendance.id).guest_id).email %></td>
+				      
+						<% i += 1 %>
+				    </tr>
+		        </div>
+	        <% end%>     
+        </div>
+	</div>
+
+	<p class="text-center">  <%= link_to 'Edit the event', edit_event_path(Event.find(@attendance.event_id)), class: "btn btn-success" %></p>
+  </tbody>
+
+</table>
+
+
+<%= link_to 'Back', attendances_path %>
